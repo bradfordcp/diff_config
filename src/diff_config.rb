@@ -94,7 +94,10 @@ class DiffConfig
           diff_value(key, value, right[key])
         end
       else
-        puts "Key #{key}: missing" unless @whitelist_keys.include? key
+        unless @whitelist_keys.include? key
+          puts "Key #{key}: missing"
+          puts "  expected: #{value}"
+        end
       end
     end
 
