@@ -46,8 +46,8 @@ md5 test_configs/CAT/**/spark-env.sh
 
 ```
 diff_config -s 'configs/SIT/address.yaml' -t 'test_configs/SIT/**/address.yaml'
-diff_config -s 'configs/SIT/cassandra.yaml' -t 'test_configs/SIT/**/cassandra.yaml' -w rpc_address,listen_address
-diff_config -s 'configs/SIT/cassandra-rackdc.properties' -t 'test_configs/SIT/**/cassandra-rackdc.properties'
+diff_config -s 'configs/SIT/cassandra.yaml' -t 'test_configs/SIT/**/cassandra.yaml' -w rpc_address,listen_address > results/SIT_cassandra.yaml
+diff_config -s 'configs/SIT/cassandra-rackdc.properties' -t 'test_configs/SIT/**/cassandra-rackdc.properties' > results/SIT_cassandra-rackdc.properties
 diff_config -s 'configs/SIT/dse.yaml' -t 'test_configs/SIT/**/dse.yaml'
 diff_config -s 'configs/SIT/spark-defaults.conf' -t 'test_configs/SIT/**/spark-defaults.conf'
 ```
