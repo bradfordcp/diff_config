@@ -6,24 +6,27 @@ Tool for diffing a large number of configuration files. Currently supports .yaml
 The following is the disk layout I use. It is possible to use many other layouts since the logic simply globs through the
 target directory.
 
-```
-+ configs                 # Home to configurations which are considered accurate. These will be the base configs to compare against.
-+ test_configs            # Directory of configurations to test
-  + DEV                   # Environment identifier, this is **NOT** required.
-    + HOSTNAME            # Hostname identifier to allow for syncing of configurations later
-      + cassandra.yaml    # Sample configuration file
-      + cassandra-env.sh
-      + ...
-    + HOSTNAME2
-      + ...
+```none
++ configs                   # Home to configurations which are considered accurate.
+| + DEV                     # Environment identifier
+| | + cassandra.yaml        # Sample configuration file
+| | + spark-defaults.conf
+| + default                 # Default configuration files for comparing with. This may be omitted.
++ test_configs              # Directory of configurations to test
+  + DEV                     # Environment identifier, this directory may be omitted
+  | + HOSTNAME              # Hostname identifier, this directory may be omitted.
+  | | + cassandra.yaml      # Sample configuration file
+  | | + spark-defaults.conf
+  | | + ...
+  | + HOSTNAME2
+  |   + ...
   + SIT
     + ...
-+
 ```
 
 ## Usage
 
-```
+```fish
 ➜  diff_config -h
 Usage: diff_config [options]
     -s, --source SOURCE
@@ -37,15 +40,24 @@ Usage: diff_config [options]
 
 ## Sample Commands
 
+**Compare a directory full of configs from many servers**
+
 ```
-diff_config -s 'configs/DEV/address.yaml' -t 'test_configs/DEV/**/address.yaml'
 diff_config -s 'configs/DEV/cassandra.yaml' -t 'test_configs/DEV/**/cassandra.yaml' -w rpc_address,listen_address
 diff_config -s 'configs/DEV/cassandra-rackdc.properties' -t 'test_configs/DEV/**/cassandra-rackdc.properties'
-diff_config -s 'configs/DEV/dse.yaml' -t 'test_configs/DEV/**/dse.yaml'
 diff_config -s 'configs/DEV/spark-defaults.conf' -t 'test_configs/DEV/**/spark-defaults.conf'
 ```
 
-*MD5 used for files which cannot be directly compared. Look for differing hashes*
+**Compare a single pair of configs**
+
+```
+diff_config -s 'configs/DEV/cassandra.yaml' -t 'test_configs/DEV/foo/cassandra.yaml' -w rpc_address,listen_address
+diff_config -s 'configs/DEV/cassandra-rackdc.properties' -t 'test_configs/DEV/foo/cassandra-rackdc.properties'
+diff_config -s 'configs/DEV/spark-defaults.conf' -t 'test_configs/DEV/foo/spark-defaults.conf'
+```
+
+## Other approaches
+Some files may not be loaded and compared in the manner we use for diff_config. It may also be faster to simply see if the files match (eg cassandra-env.sh). In this case we use the `md5` (`md5sum` in some distributions) to generate a hash of the file. If the hash of two files match then the two files are **extremely** likely to be the same. Look for files with different hashes to investigate further.
 
 ```
 md5 configs/DEV/cassandra-env.sh

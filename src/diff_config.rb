@@ -77,7 +77,7 @@ class DiffConfig
     (right.keys - left.keys).each do |key|
       unless @whitelist_keys.include? key
         puts "Key #{id}:"
-        puts "  extra value: #{key}:#{right[key]}"
+        puts "  extra value: {#{key}: #{right[key]}}"
       end
     end
   end
