@@ -1,4 +1,6 @@
-require 'yaml'
+require_relative 'yaml_loader'
+require_relative 'properties_loader'
+require_relative 'conf_loader'
 
 class DiffConfig
   def initialize(options)
@@ -29,41 +31,11 @@ class DiffConfig
   def load_config(path)
     case File.extname(path)
     when '.yaml'
-      YAML.load_file path
+      YAMLLoader.load_config path
     when '.properties'
-      config = {}
-      File.open(path, 'r') do |io|
-        io.each_line do |raw_line|
-          line = raw_line.strip
-
-          unless line[0] == '#'
-            if parts.length == 2
-              config[parts[0]] = parts[1]
-            else
-              throw RuntimeError.new("Error parsing #{path}: #{parts}")
-            end
-          end
-        end
-      end
-      config
+      PropertiesLoader.load_config path
     when '.conf'
-      config = {}
-      File.open(path, 'r') do |io|
-        matcher = /([a-z\.A-Z]*)\s*(.*)/
-        io.each_line do |raw_line|
-          line = raw_line.strip
-
-          unless line[0] == '#'
-            match_data = matcher.match line
-            if match_data.length == 3
-              config[match_data[1]] = match_data[2]
-            else
-              throw RuntimeError.new("Error parsing #{path}: #{parts}")
-            end
-          end
-        end
-      end
-      config
+      ConfLoader.load_config path
     else
       {}
     end
