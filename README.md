@@ -1,6 +1,6 @@
 # Diff Config
 
-Tool for diffing a large number of configuration files. Currently supports .yaml, .conf, and .properties files shipped with DSE.
+Tool for diffing a large number of configuration files. Currently supports `.yaml`, `.conf`, and `.properties` files shipped with DSE.
 
 ## Sample Disk layout
 The following is the disk layout I use. It is possible to use many other layouts since the logic simply globs through the
