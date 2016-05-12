@@ -1,0 +1,29 @@
+#!/usr/bin/env ruby
+
+require 'pp'
+require 'optparse'
+require_relative '../src/diff_config'
+
+options = {
+  ignore_comments: true,
+  whitelist_keys: []
+}
+OptionParser.new do |opts|
+  opts.banner = 'Usage: diff_config [options]'
+  opts.version = '1.0.0'
+
+  opts.on('-s', '--source SOURCE') do |src|
+    options[:source] = src
+  end
+
+  opts.on('-t', '--targets TARGETS') do |target|
+    options[:target] = target
+  end
+
+  opts.on('-w', '--whitelist KEYS') do |keys|
+    options[:whitelist_keys] = keys.split(',')
+  end
+end.parse!
+
+dc = DiffConfig.new(options)
+dc.diff
